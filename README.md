@@ -1,9 +1,8 @@
 # Storefront & Admin Suite
 
 A front-end e-commerce project with two connected halves: a customer storefront and
-an admin dashboard, sharing one typed data layer. No real backend — everything runs against
-a mock async API with real latency and error handling, so the app behaves the way it would
-against a live server.
+an admin dashboard, sharing one typed data layer.There's no real backend, everything runs against
+a mock async API with real latency and error handling so the app deals with loading and error states the same way it would against the live server.
 
 Demo admin login: `admin@comfortcrumb.com` / `admin123`
 
@@ -11,9 +10,9 @@ Demo admin login: `admin@comfortcrumb.com` / `admin123`
 
 **Storefront**
 - Product catalog with search, category filters, and sorting
-- Persistent cart (survives a refresh) with quantity controls
+- Persistent cart with quantity controls
 - Multi-step checkout with client-side validation and server-side stock re-checks
-- Auth with two roles — customers can shop and check out, only admins can reach `/admin`
+- Auth with two roles: customers can shop and check out, only admins can reach `/admin`
 
 **Admin dashboard**
 - Overview page: stat cards with period-over-period change, a revenue trend chart, a
@@ -24,36 +23,17 @@ Demo admin login: `admin@comfortcrumb.com` / `admin123`
   retry states are easy to demo
 
 **Cutting across both halves**
-- Every screen that reads data handles loading, empty, and error states — nothing renders
-  only the happy path
+- Every screen that reads data handles loading, empty, and error states
 - A shared `DataContext` triggers a refetch anywhere relevant after any write, so placing an
   order or editing stock updates every screen that depends on it, without prop drilling
-- Dark mode, responsive layout down to mobile, and no external UI framework — every
-  component is hand-built
-
-## Why it's built this way
-
-Most beginner e-commerce projects stop at a flat product list with hardcoded data. This one
-is built around a few decisions meant to make it feel closer to a real product:
-
-- **A typed domain model, not just a form.** Products, orders, and cart items are modeled as
-  proper TypeScript interfaces, with derived values (revenue, category totals, trend
-  percentages) computed from raw orders rather than stored redundantly.
-- **An async layer that behaves like a real API.** Every read and write has simulated
-  latency and can fail, which forces the UI to handle loading and error states properly
-  instead of assuming data is always there instantly.
-- **Role-based auth**, not just a login screen. Customers and admins see different parts of
-  the app, and the routing enforces it.
-- **The two halves are actually connected.** An order placed in the storefront reduces
-  stock and shows up in the dashboard's revenue and orders — they're not two separate
-  demos glued together.
+- Dark mode, responsive layout down to mobile, and no external UI framework 
 
 ## Stack
 
 React 19 · TypeScript · Vite · Tailwind CSS v4 · React Router · Recharts ·
 lucide-react
 
-## Getting started
+## Running it
 
 ```bash
 npm install
@@ -67,12 +47,16 @@ Reset it anytime from **Settings** in the admin dashboard.
 
 ```
 src/
-  components/     Shared UI (cards, tables, modals, empty/error states, image fallback)
-  context/        Auth, cart, theme, and a data-refresh signal used across the app
-  data/           Seed data and static reference data (categories, pricing rules)
-  hooks/          useAsync (data fetching with loading/error state), useLocalStorage
+  components/     Shared UI — cards, tables, modals, empty/error states, image fallback
+  context/        Auth, cart, theme, and the data-refresh signal
+  data/           Seed data and static reference data
+  hooks/          useAsync (loading/error state for data fetching), useLocalStorage
   layouts/        Route layouts and the auth guard
   lib/            The mock API, formatting helpers, shared class strings
   pages/          Storefront pages and admin pages
-  types.ts        Domain types shared across the app
+  types.ts        Shared domain types
 ```
+
+## What's missing
+
+There is no real backend, no image upload for products, no email notifications and no tests yet.
